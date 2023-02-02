@@ -1,0 +1,59 @@
+﻿@page "/EditContact/{Id}"
+@using BlazorCRUD.Data
+@inject ContactService contactService
+@inject NavigationManager NavigationManager
+
+<h2>Edit Contact</h2>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="firstName" class="control-label">First Name</label>
+                <input form="firstName" class="form-control" @bind="@obj.FirstName" />
+            </div>
+            <div class="form-group">
+                <label for="lastName" class="control-label">Last Name</label>
+                <input form="lastName" class="form-control" @bind="@obj.LastName" />
+            </div>
+            <div class="form-group">
+                <label for="PhoneNumber" class="control-label">Phone Number</label>
+                <input form="PhoneNumber" class="form-control" @bind="@obj.PhoneNumber" />
+            </div>
+            <div class="form-group">
+                <label for="BirthDate" class="control-label">BirthDate</label>
+                <input form="BirthDate" class="form-control" @bind="@obj.BirthDate" />
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@UpdateContact" value="Update" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    Contact obj = new Contact();
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Task.Run(() => contactService.GetContactAsync(Id));
+    }
+    protected async void UpdateContact()
+    {
+        await contactService.UpdateContactAsync(obj);
+        NavigationManager.NavigateTo("Contacts");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Contacts");
+    }
+}

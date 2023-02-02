@@ -1,0 +1,46 @@
+﻿@page "/AddContact"
+@using BlazorCRUD.Data
+@inject ContactService contactService
+@inject NavigationManager NavigationManager
+
+<h2>Add Contact</h2>
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Name" class="control-label">FirstName</label>
+                <input form="Name" class="form-control" @bind="@obj.FirstName" />
+                <label for="Name" class="control-label">LastName</label>
+                <input form="Name" class="form-control" @bind="@obj.LastName" />
+                <label for="Name" class="control-label">PhoneNumber</label>
+                <input form="Name" class="form-control" @bind="@obj.PhoneNumber" />
+                <label for="Name" class="control-label">BirthDate</label>
+                <input form="Name" class="form-control" @bind="@obj.BirthDate" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateContact" value="Save"/>
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel"/>
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    Contact obj = new Contact();
+    protected async void CreateContact()
+    {
+        await contactService.InsertContactAsync(obj);
+        NavigationManager.NavigateTo("Contacts");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Contacts");
+    }
+}

@@ -1,0 +1,55 @@
+﻿@page "/Contacts"
+@using BlazorCRUD.Data
+@inject ContactService contactService
+
+<NavLink class="nav-link" href="AddContact">
+    <span class="oi oi-plus" aria-hidden="true">Add New</span>
+
+</NavLink>
+
+<h1>Contact Info</h1>
+@if (EmpObj is null)
+{
+    <p><em>Loading... !</em></p>
+}
+else
+{
+    <table class="table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>BirthDate</th>
+                </tr>
+            </thead>
+        <tbody>
+            @foreach(var emp in EmpObj)
+                {
+            <tr>
+                <td>@emp.FirstName</td>
+                <td>@emp.LastName</td>
+                <td>@emp.PhoneNumber</td>
+                <td>@emp.BirthDate.ToShortDateString()</td>
+                <td>
+                    <a class="nav-link" href="EditContact/@emp.Id">
+                        <span class="oi oi-pencil" aria-hidden="true">Edit</span>
+                    </a>
+                    <a class="nav-link" href="Delete/@emp.Id">
+                        <span class="oi oi-trash" aria-hidden="true">Delete</span>
+                    </a>
+                </td>
+            </tr>
+                }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    List<Contact> EmpObj;
+    protected override async Task OnInitializedAsync()
+    {
+        EmpObj = await Task.Run(() => contactService.GetAllContactsAsync());
+    }
+}
